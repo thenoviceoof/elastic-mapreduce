@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Amazon.com", "Koichi Fujikawa"]
-  s.date = "2012-01-12"
+  s.date = "2012-06-28"
   s.description = "Original is official but this is Unofficial gem."
   s.email = "fujibee@hapyrus.com"
   s.executables = ["elastic-mapreduce"]
@@ -86,7 +86,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/hapyrus/elastic-mapreduce"
   s.licenses = ["Apache License"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.11"
+  s.rubygems_version = "1.8.15"
   s.summary = "Amazon's commandline client for EMR (Elastic Map-Reduce) invocation (Unofficial Gem and Ruby 1.9 Version)"
 
   if s.respond_to? :specification_version then
