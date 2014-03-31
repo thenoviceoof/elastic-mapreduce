@@ -109,7 +109,7 @@ module Amazon
 
         # make connection over HTTP
         chain << HttpHandler.new( {:ca_file => args[:ca_file], :verbose => args[:verbose],
-                                    :timeout => args[:timeout], :connect_timeout => args[:connect_timeout]} )
+                                    :timeout => args[:timeout], :connect_timeout => args[:connect_timeout], :proxy => args[:proxy]} )
 
         return chain
       end

@@ -39,6 +39,7 @@ module Amazon
         @ca_file = args[:ca_file]
         @connect_timeout = args[:connect_timeout]
         @timeout = args[:timeout]
+        @proxy = args[:proxy] || {}
 
         @connect_timeout = 5.0 if @connect_timeout.nil?
         @timeout = 120.0 if @timeout.nil?
@@ -80,21 +81,17 @@ module Amazon
           puts "Requesting URL:\n#{uri}\nQuery string:\n#{query_map}\nHeaders:\n#{headers}\n" 
         end
 
-        http = Net::HTTP.new(uri.host, uri.port)
+        http = Net::HTTP.new(uri.host, uri.port, @proxy[:host], @proxy[:port], @proxy[:user], @proxy[:pass])
         http.read_timeout = @timeout;
         http.open_timeout = @connect_timeout;
 
         if(uri.scheme == 'https')
           # enable SSL
           http.use_ssl = true
-
-          # if we haven't been given CA certificates to check, disable certificate verification (otherwise we'll get repeated warnings to STDOUT)
-          if @ca_file.nil?
-            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          else
-            http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-            http.ca_file = @ca_file
-          end
+        
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          http.ca_file = @ca_file
+     
 
           # negotiate with the client certificate, if one is present
           unless(cert.nil? || key.nil?)

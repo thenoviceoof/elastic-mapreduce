@@ -25,6 +25,16 @@ class EmrClient
       :timeout             => 160.0
     }
 
+    if @options[:http_proxy] != nil then
+      uri = URI @options[:http_proxy]
+      @config[:proxy] = {
+        :host => uri.host,
+        :port => uri.port,
+        :user => @options[:http_proxy_user],
+        :pass => @options[:http_proxy_pass],
+      }
+    end
+
     @client = Amazon::RetryDelegator.new(
       client_class.new_aws_query(@config),
       :retry_if => Proc.new { |*opts| self.is_retryable_error_response(*opts) }
@@ -94,6 +104,13 @@ class EmrClient
     return raise_on_error(result)
   end
 
+  def set_visible_to_all_users(jobflow_ids, visible)
+    logger.trace "SetVisibleToAllUsers('JobFlowIds' => #{jobflow_ids.inspect}, 'VisibleToAllUsers' => #{visible})"
+    result = @client.SetVisibleToAllUsers('JobFlowIds' => jobflow_ids, 'VisibleToAllUsers' => visible)
+    logger.trace result.inspect
+    return raise_on_error(result)
+  end
+
   def terminate_jobflows(jobflow_ids)
     logger.trace "TerminateJobFlows('JobFlowIds' => #{jobflow_ids.inspect})"
     result = @client.TerminateJobFlows('JobFlowIds' => jobflow_ids)
@@ -114,6 +131,34 @@ class EmrClient
     logger.trace result.inspect
     return raise_on_error(result)
   end    
+
+  def add_tags(resource_id, tags)
+    logger.trace "AddTags('ResourceId' => #{resource_id}, 'Tags' => #{tags.inspect})"
+    result = @client.AddTags('ResourceId' => resource_id, 'Tags' => tags)
+    logger.trace result.inspect
+    return raise_on_error(result)
+  end
+
+  def remove_tags(resource_id, tag_keys)
+    logger.trace "RemoveTags('ResourceId' => #{resource_id}, 'Tags' => #{tag_keys.inspect})"
+    result = @client.RemoveTags('ResourceId' => resource_id, 'TagKeys' => tag_keys)
+    logger.trace result.inspect
+    return raise_on_error(result)
+  end
+
+  def list_tags(resource_id)
+    logger.trace "ListTags('ResourceId' => #{resource_id})"
+    result = @client.ListTags('ResourceId' => resource_id)
+    logger.trace result.inspect
+    return raise_on_error(result)
+  end
+
+  def describe_cluster(cluster_id)
+    logger.trace "DescribeCluster('ClusterId' => #{cluster_id})"
+    result = @client.DescribeCluster('ClusterId' => cluster_id)
+    logger.trace result.inspect
+    return raise_on_error(result)
+  end
 
 end
 

@@ -7,7 +7,7 @@ require 'rexml/document'
 require 'amazon/coral/handler'
 require 'amazon/coral/querystringmap'
 require 'amazon/coral/logfactory'
-require 'amazon/aws/exceptions'
+require 'amazon/exceptions'
 
 module Amazon
   module Coral

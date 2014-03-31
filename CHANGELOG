@@ -58,3 +58,12 @@
 * Fixed the Elastic IP code and associated --eip command line option which
   were broken by the last release.
 
+== 2012-06-12 Added Support for HBase and MapR.
+
+== 2013-09-24 Added Support for HBase on Hadoop2.
+
+== 2013-11-01 Added abbility for using proxy services
+
+== 2013-12-02 Added support for tagging
+
+== 2013-12-10 Support Impala

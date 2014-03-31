@@ -28,6 +28,10 @@ class Credentials
                    [:region, "region"], 
                    [:enable_debugging, "enable-debugging"],
                    [:hadoop_version, "hadoop-version"],
+                   [:jobflow_role, "jobflow-role"],
+                   [:http_proxy, "http-proxy"],
+                   [:http_proxy_user, "http-proxy-user"],
+                   [:http_proxy_pass, "http-proxy-pass"],
                   ]
     
     env_options = [
@@ -37,11 +41,11 @@ class Credentials
                    ['ELASTIC_MAPREDUCE_KEY_PAIR_FILE',     :key_pair_file],
                    ['ELASTIC_MAPREDUCE_LOG_URI',           :log_uri],
                    ['ELASTIC_MAPREDUCE_APPS_PATH',         :apps_path],
-                   ['ELASTIC_MAPREDUCE_BETA_PATH',         :beta_path],
                    ['ELASTIC_MAPREDUCE_ENDPOINT',          :endpoint],
                    ['ELASTIC_MAPREDUCE_REGION',            :region],
                    ['ELASTIC_MAPREDUCE_HADOOP_VERSION',    :hadoop_version],
-                   ['ELASTIC_MAPREDUCE_ENABLE_DEBUGGING',  :enable_debugging]
+                   ['ELASTIC_MAPREDUCE_ENABLE_DEBUGGING',  :enable_debugging],
+                   ['ELASTIC_MAPREDUCE_JOBFLOW_ROLE',      :jobflow_role]
                   ]
     
     for env_key, option_key in env_options do
@@ -49,14 +53,20 @@ class Credentials
         options[option_key] = ENV[env_key]
       end
     end
-    
-    candidates = [
-                  credentials, 
-                  ENV['ELASTIC_MAPREDUCE_CREDENTIALS'], 
-                  File.join(File.dirname(__FILE__), credentials),
-                  File.join(ENV['HOME'],  "." + credentials), 
-                  File.join(ENV['HOME'],  credentials)
-                 ]
+
+    candidates = []
+    if credentials != nil then
+      candidates.push(credentials)
+      candidates.push(File.join(File.dirname(__FILE__), credentials))
+      if ENV['HOME'] != nil then
+        candidates.push(File.join(ENV['HOME'],  "." + credentials))
+        candidates.push(File.join(ENV['HOME'],  credentials))
+      end
+    end
+
+    if ENV['ELASTIC_MAPREDUCE_CREDENTIALS'] != nil then
+      candidates.push(ENV['ELASTIC_MAPREDUCE_CREDENTIALS'])
+    end
 
     filename = candidates.find { |fname| File.exist?(fname) if fname }
     if filename != nil then
